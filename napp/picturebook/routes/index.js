@@ -7,9 +7,15 @@ const { response } = require('express');
 
 
 router.get('/', ensureGuest, (req, res) => {
-  res.render('login', {
+  // res.json({message: "hello there"})
+  try {
+    res.render('login', {
     layout: 'login',
-  })
+    })
+  }catch (err) {
+    console.error(err)
+    res.render('error/500')
+  }
 })
 
 async function getTodaysImage() {

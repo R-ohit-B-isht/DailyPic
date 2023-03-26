@@ -67,6 +67,8 @@ app.engine(
 );
 app.set("view engine", ".hbs");
 
+const viewsDir = path.join(__dirname, 'views');
+app.set('views', viewsDir)
 // Sessions
 app.use(
   session({
@@ -91,10 +93,8 @@ app.use(function (req, res, next) {
 app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
-// app.use('/', require('./routes/index'))
-app.use('/', (req, res) => {
-  res.json({message: "hellop"})
-})
+app.use('/', require('./routes/index'))
+
 app.use("/auth", require("./routes/auth"));
 
 const PORT = process.env.PORT || 3000;
