@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { ensureAuth, ensureGuest } = require('../middleware/auth')
 const axios = require('axios');
-
+const path = require('path');
 const { response } = require('express');
 
 
@@ -34,12 +34,20 @@ async function getTodaysImage() {
 
 router.get('/dashboard', ensureAuth, async (req, res) => {
   try {
-    let imageurl= await getTodaysImage()
+    let imageurl = await getTodaysImage()
+    let img, vid;
+    const fileExtension = path.extname(imageurl.url);
+if (fileExtension === '.jpg' || fileExtension === '.jpeg' || fileExtension === '.png') {
+  img=imageurl
+} else {
+  vid=imageurl
+}
     res.render('dashboard', {
       name: req.user.firstName,
-      imageurl,
+      img,
+      vid,
     })
-
+console.log(imageurl,img,vid)
   } catch (err) {
     console.error(err)
     res.render('error/500')

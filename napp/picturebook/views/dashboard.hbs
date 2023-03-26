@@ -1,5 +1,5 @@
 
-{{#if imageurl}}
+{{#if img}}
 <div class='card2'>
        <h4>Image of the Day</h4>
         
@@ -7,22 +7,27 @@
       
         <div class='center'>
         <div class='card' >
-          {{#if imageurl.url.endsWith('.jpg') or imageurl.url.endsWith('.jpeg') or imageurl.url.endsWith('.png') or imageurl.url.endsWith('.gif')}}
-  <img 
-          src={{imageurl.url}}
-          alt={{imageurl.title}}
-          class='space'
-        />
-{{else}}
- <video src="{{imageurl.url}}" alt="{{imageurl.title}}" controls class='space'></video>
-{{/if}}
         <img 
-          src={{imageurl.url}}
-          alt={{imageurl.title}}
+          src={{img.url}}
+          alt={{img.title}}
           class='space'
         />
-        <h6>{{imageurl.title}}</h6>
-        {{imageurl.explanation}}
+        <h5>{{img.title}}</h5>
+        {{img.explanation}}
+        
+      </div>
+</div>
+{{else}}
+<div class='card2'>
+       <h4>Video of the Day</h4>
+        
+      </div>
+      
+        <div class='center'>
+        <div class='card' >
+        <iframe src={{vid.url}} width="640" height="360" frameborder="0" allowfullscreen></iframe>
+        <h5>{{vid.title}}</h5>
+        {{vid.explanation}}
         
       </div>
 </div>
