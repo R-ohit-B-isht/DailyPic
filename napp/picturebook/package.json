@@ -6,8 +6,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node app",
     "dev": "cross-env NODE_ENV=development nodemon app",
-    "postinstall": "node ./scripts/post-install.js",
-    "build": "rm -rf dist && mkdir dist && cp -R public dist/public && cp -R views dist/views && cp -R scripts dist/scripts && cp -R routes dist/routes && cp -R config dist/config && cp -R helpers dist/helpers && cp -R middleware dist/middleware && cp -R models dist/models && cp package.json dist/ && cp app.js dist/"
+    "postinstall": "node ./scripts/post-install.js"
+
   },
   "author": "Rohit Bisht",
   "dependencies": {
