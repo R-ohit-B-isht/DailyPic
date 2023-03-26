@@ -1,0 +1,43 @@
+const express = require('express')
+const router = express.Router()
+const { ensureAuth, ensureGuest } = require('../middleware/auth')
+const axios = require('axios');
+
+const { response } = require('express');
+
+
+router.get('/', ensureGuest, (req, res) => {
+  res.render('login', {
+    layout: 'login',
+  })
+})
+
+async function getTodaysImage() {
+  let today = new Date();
+  let yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  yesterday=yesterday.toISOString().split('T')[0]
+  today=today.toISOString().split('T')[0]
+  const apiKey = 'EWrEh3u0WEDyM2DyWRp1zb0VoGzH2XMxz1uszjQP'; // replace with your own API key
+  let url = `https://api.nasa.gov/planetary/apod?date=${yesterday}&api_key=${apiKey}`
+  const udata = await axios.get(url);
+
+  return udata.data;
+
+}
+
+router.get('/dashboard', ensureAuth, async (req, res) => {
+  try {
+    let imageurl= await getTodaysImage()
+    res.render('dashboard', {
+      name: req.user.firstName,
+      imageurl,
+    })
+
+  } catch (err) {
+    console.error(err)
+    res.render('error/500')
+  }
+})
+
+module.exports = router

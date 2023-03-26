@@ -1,0 +1,20 @@
+
+{{#if imageurl}}
+<div class='card2'>
+       <h4>Image of the Day</h4>
+        
+      </div>
+      
+        <div class='center'>
+        <div class='card' >
+        <img 
+          src={{imageurl.url}}
+          alt={{imageurl.title}}
+          class='space'
+        />
+        <h6>{{imageurl.title}}</h6>
+        {{imageurl.explanation}}
+        
+      </div>
+</div>
+{{/if}}
