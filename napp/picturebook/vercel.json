@@ -1,8 +1,10 @@
 {
     "builds": [
-        { "src": "app.js", "use": "@now/node" },
-        { "src": "routes/**/*.js", "use": "@now/node" },
-        { "src": "config/**/*.js", "use": "@now/node" }
+        {
+            "src": "app.js",
+            "use": "@vercel/node",
+            "config": { "includeFiles": ["config/**"]}
+        }
     ],
     "routes": [
         {
