@@ -7,6 +7,15 @@
       
         <div class='center'>
         <div class='card' >
+          {{#if imageurl.url.endsWith('.jpg') or imageurl.url.endsWith('.jpeg') or imageurl.url.endsWith('.png') or imageurl.url.endsWith('.gif')}}
+  <img 
+          src={{imageurl.url}}
+          alt={{imageurl.title}}
+          class='space'
+        />
+{{else}}
+ <video src="{{imageurl.url}}" alt="{{imageurl.title}}" controls class='space'></video>
+{{/if}}
         <img 
           src={{imageurl.url}}
           alt={{imageurl.title}}
