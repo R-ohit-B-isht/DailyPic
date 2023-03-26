@@ -8,7 +8,7 @@ const { response } = require('express');
 
 router.get('/', ensureGuest, (req, res) => {
   res.render('login', {
-    layout: 'login.hbs',
+    layout: 'login',
   })
 })
 
