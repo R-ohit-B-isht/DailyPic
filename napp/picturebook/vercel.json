@@ -1,10 +1,8 @@
 {
     "builds": [
-        {
-            "src": "app.js",
-            "use": "@now/node",
-            "config": { "includeFiles": ["config/**"]}
-        }
+        { "src": "app.js", "use": "@now/node" },
+        { "src": "routes/**/*.js", "use": "@now/node" },
+        { "src": "config/**/*.js", "use": "@now/node" }
     ],
     "routes": [
         {
