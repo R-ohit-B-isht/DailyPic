@@ -21,11 +21,11 @@ router.get('/', ensureGuest, (req, res) => {
 async function getTodaysImage() {
   let today = new Date();
   let yesterday = new Date();
-  yesterday.setDate(today.getDate() - 2);
+  yesterday.setDate(today.getDate() - 1);
   yesterday=yesterday.toISOString().split('T')[0]
   today=today.toISOString().split('T')[0]
   const apiKey = 'EWrEh3u0WEDyM2DyWRp1zb0VoGzH2XMxz1uszjQP'; // replace with your own API key
-  let url = `https://api.nasa.gov/planetary/apod?date=${today}&api_key=${apiKey}`
+  let url = `https://api.nasa.gov/planetary/apod?date=${yesterday}&api_key=${apiKey}`
   const udata = await axios.get(url);
 
   return udata.data;
