@@ -17,5 +17,13 @@
         "SESSION_SECRET": "keyboard cat",
         "GOOGLE_CLIENT_ID": "348011173444-nbs8246eld5anpfnpc6kvgnbt9282qb5.apps.googleusercontent.com",
         "GOOGLE_CLIENT_SECRET": "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"
-      }
+      },
+    "projectSettings": {
+        "buildCommand": null,
+        "devCommand": null,
+        "framework": "nextjs",
+        "commandForIgnoringBuildStep": "",
+        "installCommand": null,
+        "outputDirectory": null
+    },
   }
