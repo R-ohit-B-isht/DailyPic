@@ -4,6 +4,7 @@ const { ensureAuth, ensureGuest } = require("../middleware/auth");
 const axios = require("axios");
 const cron = require('node-cron');
 const NewsItem = require('../models/NewsItem');
+const User = require('../models/User');
 const path = require("path");
 const { response } = require("express");
 
@@ -83,7 +84,7 @@ cron.schedule('*/10 * * * * *', () => {
 
 const ITEMS_PER_PAGE = 9;
 
-router.get('/dashboard',ensureAuth, async (req, res) => {
+router.get('/dashboard', ensureAuth, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const skip = (page - 1) * ITEMS_PER_PAGE;
@@ -91,10 +92,20 @@ router.get('/dashboard',ensureAuth, async (req, res) => {
     const totalItems = await NewsItem.countDocuments({});
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-    const newsItems = await NewsItem.find()
+    // Fetch all news items, including deleted ones
+    const allNewsItems = await NewsItem.find()
       .sort({ postedOn: -1 })
       .skip(skip)
       .limit(ITEMS_PER_PAGE);
+
+    // Filter out deleted items
+    const nonDeletedNewsItems = allNewsItems.filter((item) => {
+      const isDeleted = req.user.deleted.some((deletedItem) => deletedItem.articleId.toString() === item._id.toString());
+      return !isDeleted;
+    });
+
+    // Extract markedAsRead item IDs
+    const markedAsReadItemIds = req.user.markedAsRead.map((item) => item.newsItemId);
 
     const pages = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -105,7 +116,10 @@ router.get('/dashboard',ensureAuth, async (req, res) => {
     }
 
     res.render('dashboard', {
-      newsItems,
+      newsItems: nonDeletedNewsItems.map((item) => ({
+        ...item.toObject(),
+        markedAsRead: markedAsReadItemIds.includes(item.id),
+      })),
       currentPage: page,
       pages,
     });
@@ -114,6 +128,7 @@ router.get('/dashboard',ensureAuth, async (req, res) => {
     res.render('error/500');
   }
 });
+
 
 router.get('/news/:id',ensureAuth, async (req, res) => {
   try {
@@ -154,5 +169,37 @@ router.post('/markAsRead/:articleId',ensureAuth, async (req, res) => {
   }
 });
 
+router.post('/deleteItem/:articleId', ensureAuth, async (req, res) => {
+  const { articleId } = req.params;
+
+  try {
+    // Check if the articleId exists in the NewsItem collection
+    const newsItem = await NewsItem.findById(articleId);
+    
+    if (!newsItem) {
+      return res.status(404).json({ error: 'News item not found' });
+    }
+
+    // Check if the user already marked this item as deleted
+    const isAlreadyDeleted = req.user.deleted.some((deletedItem) => deletedItem.articleId.toString() === articleId);
+
+    if (!isAlreadyDeleted) {
+      // Add the articleId to the user's deleted array
+      req.user.deleted.push({ articleId });
+      await req.user.save();
+
+      // Optional: You can also remove the item from markedAsRead if needed
+      req.user.markedAsRead = req.user.markedAsRead.filter((readItem) => readItem.newsItemId.toString() !== articleId);
+      await req.user.save();
+
+      res.status(200).json({ message: 'Item marked as deleted' });
+    } else {
+      res.status(400).json({ error: 'Item already marked as deleted' });
+    }
+  } catch (error) {
+    console.error('Error deleting item:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 
+
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -32,6 +33,11 @@ const UserSchema = new mongoose.Schema({
     {
       articleId: String,
       newsItemId: String,
+    },
+  ],
+  deleted: [
+    {
+      articleId:String,
     },
   ],
 })

@@ -7,7 +7,7 @@
     {{#each newsItems}}
       <div class="col s12 m6 l4">
         <a href="/news/{{this.id}}" class="news-card-link">
-          <div class="card large hoverable">
+          <div class="card large hoverable {{#if markedAsRead}}marked-as-read{{/if}}">
             <div class="card-content">
               <span class="card-title">{{this.title}}</span>
               <p class="truncate">{{this.text}}</p>
@@ -55,7 +55,38 @@
       console.error('Error marking as read:', error);
     }
   }
+
+  async function deleteItem(articleId) {
+    try {
+      const response = await fetch(`/deleteItem/${articleId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Reload the page or update the UI as needed
+        location.reload();
+      } else {
+        console.error('Failed to delete item');
+      }
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    // Add logic to update UI based on marked-as-read items
+    const markedAsReadItems = document.querySelectorAll('.card.marked-as-read');
+
+    markedAsReadItems.forEach((item) => {
+      item.classList.remove('blue');
+      item.classList.add('less-blue');
+    });
+  });
 </script>
+
 
 
 
@@ -118,4 +149,13 @@
   .delete-item:hover {
     background-color: #d32f2f; /* Darker red on hover */
   }
+
+  .marked-as-read {
+  opacity: 0.8; /* Slightly less transparent */
+}
+
+.less-blue {
+  background-color: #a0d9ff5b; /* Adjusted color for less blue */
+}
+
 </style>
