@@ -51,25 +51,29 @@ const {
 } = require("./helpers/hbs");
 
 // Handlebars
-app.engine(
-  ".hbs",
-  exphbs({
-    helpers: {
-      formatDate,
-      stripTags,
-      truncate,
-      editIcon,
-      select,
-    },
-    defaultLayout: "main",
-    extname: ".hbs",
-  })
-);
+const hbs = exphbs.create({
+  helpers: {
+    formatDate,
+    stripTags,
+    truncate,
+    editIcon,
+  },
+  defaultLayout: "main",
+  extname: ".hbs",
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true,
+  },
+});
+
+app.engine(".hbs", hbs.engine);
 app.set("view engine", ".hbs");
 
 const viewsDir = path.join(__dirname, 'views');
-app.set('views', viewsDir)
-// Sessions
+app.set('views', viewsDir);
+
+// Register the commentRecursive partial
+hbs.handlebars.registerPartial('commentRecursive', '{{! Recursive partial to display comments }}\n{{#each this}}\n  <li>\n    <strong>{{this.by}}</strong> {{this.text}}\n    {{#if this.kids}}\n      <ul class="nested-comments">\n        {{> commentRecursive this.kids}}\n      </ul>\n    {{/if}}\n  </li>\n{{/each}}');
 app.use(
   session({
     secret: "keyboard cat",

@@ -1,35 +1,121 @@
+<!-- views/dashboard.hbs -->
+
 <div class="container">
-{{#if img}}
-<div class='card2'>
-       <h4>Image of the Day</h4>
-        
+  <h4>News Items</h4>
+
+  <div class="row">
+    {{#each newsItems}}
+      <div class="col s12 m6 l4">
+        <a href="/news/{{this.id}}" class="news-card-link">
+          <div class="card large hoverable">
+            <div class="card-content">
+              <span class="card-title">{{this.title}}</span>
+              <p class="truncate">{{this.text}}</p>
+              <p class="truncate">Posted on: {{this.postedOn}}</p>
+              <p class="truncate">Upvotes: {{this.upvotes}}</p>
+              <p class="truncate">Comments: {{this.descendants}}</p>
+            </div>
+            <div class="card-action">
+              
+                <a class="btn-small mark-read" onclick="markAsRead('{{this._id}}', '{{this.id}}')">Mark as Read</a>
+                <a class="btn-small delete-item" onclick="deleteItem('{{this._id}}')">Delete</a>
+              
+            </div>
+          </div>
+        </a>
       </div>
-      
-        <div class='center'>
-        <div class='card' >
-        <img 
-          src={{img.url}}
-          alt={{img.title}}
-          class='space'
-        />
-        <h5>{{img.title}}</h5>
-        {{img.explanation}}
-        
-      </div>
+    {{/each}}
+  </div>
+
+  <ul class="pagination">
+    {{#each pages}}
+      <li class="{{#if active}}active{{/if}} waves-effect"><a href="/dashboard?page={{number}}">{{number}}</a></li>
+    {{/each}}
+  </ul>
 </div>
-{{else}}
-<div class='card2'>
-       <h4>Video of the Day</h4>
-        
-      </div>
-      
-        <div class='center'>
-        <div class='card' >
-        <iframe src={{vid.url}} width="100%" height="360" frameborder="0" allowfullscreen></iframe>
-        <h5>{{vid.title}}</h5>
-        {{vid.explanation}}
-        
-      </div>
-</div>
-{{/if}}
-</div>
+
+<script>
+  async function markAsRead(articleId, newsItemId) {
+    try {
+      const response = await fetch(`/markAsRead/${articleId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newsItemId }),
+      });
+
+      if (response.ok) {
+        // Reload the page or update the UI as needed
+        location.reload();
+      } else {
+        console.error('Failed to mark as read');
+      }
+    } catch (error) {
+      console.error('Error marking as read:', error);
+    }
+  }
+</script>
+
+
+
+
+<style>
+  .news-card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .card-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .read-btn {
+    margin-bottom: 10px;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .btn-small {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mark-read {
+    background-color: green;
+    color: white;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .mark-read:hover {
+    background-color: blue; /* Darker teal on hover */
+  }
+
+  .delete-item {
+    background-color: #e57373; /* Red background */
+    color: white;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .delete-item:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+  }
+</style>

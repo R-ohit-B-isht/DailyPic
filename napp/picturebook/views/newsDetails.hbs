@@ -1,0 +1,78 @@
+<!-- views/newsDetails.hbs -->
+
+<div class="container">
+  <h4><a href="{{newsItem.url}}" >{{newsItem.title}}</a></h4>
+  <p><a href="{{newsItem.hackerNewsUrl}}">Hacker News URL : {{newsItem.hackerNewsUrl}} </a></p>
+
+  <!-- Display other details -->
+
+  <h5>Comments:</h5>
+  <ul class="comments">
+    {{#each comments}}
+      {{> commentRecursive}}
+    {{/each}}
+  </ul>
+</div>
+
+<!-- partials/commentRecursive.hbs -->
+
+{{! Recursive partial to display comments }}
+{{#each comments}}
+  <li class="comment">
+    <div class="user">
+      <span class="user-icon">👤</span> {{this.by}}
+    </div>
+    <div class="text">{{{this.text}}}</div>
+    {{#if this.kids}}
+      <ul class="nested-comments">
+        {{> commentRecursive comments=this.kids}}
+      </ul>
+    {{/if}}
+  </li>
+{{/each}}
+
+<style>
+  /* Add your styles for a modern look */
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .comments {
+    list-style: none;
+    max-width: :800px;
+    padding: 0;
+  }
+
+  .comment {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #00000070;
+    max-width: :800px;
+  }
+
+  .comment .user {
+    max-width: :800px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #0079d3; /* Reddit Blue */
+  }
+
+  .user-icon {
+    margin-right: 5px;
+  }
+
+  .comment .text {
+    margin-bottom: 10px;
+  }
+
+  .nested-comments {
+    margin-left: 20px;
+  }
+
+  /* Add more styles as needed */
+</style>
