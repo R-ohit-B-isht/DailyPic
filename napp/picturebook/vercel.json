@@ -25,5 +25,5 @@
         "commandForIgnoringBuildStep": "",
         "installCommand": "npm install",
         "outputDirectory": "build"
-    },
+    }
   }
