@@ -19,11 +19,11 @@
         "GOOGLE_CLIENT_SECRET": "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"
       },
     "projectSettings": {
-        "buildCommand": null,
-        "devCommand": null,
+        "buildCommand": "next build",
+        "devCommand": "next dev",
         "framework": "nextjs",
         "commandForIgnoringBuildStep": "",
-        "installCommand": null,
-        "outputDirectory": null
+        "installCommand": "npm install",
+        "outputDirectory": "build"
     },
   }
