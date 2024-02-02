@@ -25,6 +25,7 @@
     "node-cron": "^3.0.3",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
+    "cross-env": "^7.0.2"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
