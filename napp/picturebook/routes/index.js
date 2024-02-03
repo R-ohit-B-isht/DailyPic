@@ -84,7 +84,7 @@ cron.schedule('*/10 * * * * *', () => {
 
 const ITEMS_PER_PAGE = 9;
 
-router.get('/dashboard',ensureGuest, async (req, res) => {
+router.get('/dashboard',ensureAuth, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const skip = (page - 1) * ITEMS_PER_PAGE;
