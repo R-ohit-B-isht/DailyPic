@@ -84,7 +84,7 @@ cron.schedule('*/10 * * * * *', () => {
 
 const ITEMS_PER_PAGE = 9;
 
-router.get('/dashboard', ensureAuth, async (req, res) => {
+router.get('/dashboard', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const skip = (page - 1) * ITEMS_PER_PAGE;
@@ -97,31 +97,67 @@ router.get('/dashboard', ensureAuth, async (req, res) => {
       .sort({ postedOn: -1 })
       .skip(skip)
       .limit(ITEMS_PER_PAGE);
-
+    const nonDeletedNewsItems = allNewsItems
     // Filter out deleted items
-    const nonDeletedNewsItems = allNewsItems.filter((item) => {
-      const isDeleted = req.user.deleted.some((deletedItem) => deletedItem.articleId.toString() === item._id.toString());
-      return !isDeleted;
-    });
+    // const nonDeletedNewsItems = allNewsItems.filter((item) => {
+    //   const isDeleted = req.user.deleted.some((deletedItem) => deletedItem.articleId.toString() === item._id.toString());
+    //   return !isDeleted;
+    // });
 
     // Extract markedAsRead item IDs
-    const markedAsReadItemIds = req.user.markedAsRead.map((item) => item.newsItemId);
+    const markedAsReadItemIds=[]
+    // const markedAsReadItemIds = req.user.markedAsRead.map((item) => item.newsItemId);
 
-    const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push({
-        number: i,
-        active: i === page,
-      });
+    const currentPage = page;
+
+    const visiblePages = [];
+    const totalPagesGreaterThan5 = totalPages > 5;
+
+    if (totalPagesGreaterThan5) {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 5; i++) {
+          visiblePages.push({
+            number: i,
+            active: i === currentPage,
+          });
+        }
+      } else if (currentPage >= totalPages - 2) {
+        for (let i = totalPages - 4; i <= totalPages; i++) {
+          visiblePages.push({
+            number: i,
+            active: i === currentPage,
+          });
+        }
+      } else {
+        for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+          visiblePages.push({
+            number: i,
+            active: i === currentPage,
+          });
+        }
+      }
+    } else {
+      for (let i = 1; i <= totalPages; i++) {
+        visiblePages.push({
+          number: i,
+          active: i === currentPage,
+        });
+      }
     }
-
+    const showFirst = currentPage > 3;
+    const showLast = currentPage < totalPages - 2;
+    
     res.render('dashboard', {
       newsItems: nonDeletedNewsItems.map((item) => ({
         ...item.toObject(),
         markedAsRead: markedAsReadItemIds.includes(item.id),
       })),
-      currentPage: page,
-      pages,
+      currentPage,
+      totalPages,
+      totalPagesGreaterThan5,
+      visiblePages,
+      showFirst,
+      showLast,
     });
   } catch (err) {
     console.error(err);

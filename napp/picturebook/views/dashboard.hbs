@@ -27,12 +27,37 @@
     {{/each}}
   </div>
 
-  <ul class="pagination">
-    {{#each pages}}
-      <li class="{{#if active}}active{{/if}} waves-effect"><a href="/dashboard?page={{number}}">{{number}}</a></li>
+<ul class="pagination">
+  {{#if totalPagesGreaterThan5}}
+    {{#if showFirst}}
+      <li class="{{#if currentPageEquals1}}active{{/if}} pagination-item">
+        <a href="/dashboard?page=1" class="pagination-link" onmouseover="genieEffect(this)" onmouseout="resetGenieEffect(this)">1</a>
+      </li>
+      <div class="pagination-link">. . . </div>
+    {{/if}}
+
+    {{#each visiblePages}}
+      <li class="{{#if active}}active{{/if}} pagination-item">
+        <a href="/dashboard?page={{number}}" class="pagination-link" onmouseover="genieEffect(this)" onmouseout="resetGenieEffect(this)">{{number}}</a>
+      </li>
     {{/each}}
-  </ul>
-</div>
+
+    {{#if showLast}} 
+    <div class="pagination-link">. . . </div>
+      <li class="{{#if currentPageEqualsTotal}}active{{/if}} pagination-item">
+        <a href="/dashboard?page={{totalPages}}" class="pagination-link" onmouseover="genieEffect(this)" onmouseout="resetGenieEffect(this)">{{totalPages}}</a>
+      </li>
+    {{/if}}
+  {{else}}
+    {{#each visiblePages}}
+      <li class="{{#if active}}active{{/if}} pagination-item">
+        <a href="/dashboard?page={{number}}" class="pagination-link" onmouseover="genieEffect(this)" onmouseout="resetGenieEffect(this)">{{number}}</a>
+      </li>
+    {{/each}}
+  {{/if}}
+</ul>
+
+
 
 <script>
   async function markAsRead(articleId, newsItemId) {
@@ -159,3 +184,19 @@
 }
 
 </style>
+
+
+<script>
+  
+function genieEffect(element) {
+    element.style.zIndex = 2;
+    element.style.transform = 'scaleY(1.2) translateY(-10px)';
+    element.style.transition = 'transform 0.3s';
+  }
+
+  function resetGenieEffect(element) {
+    element.style.zIndex = 1;
+    element.style.transform = 'scaleY(1) translateY(0)';
+    element.style.transition = 'transform 0.3s';
+  }
+</script>
