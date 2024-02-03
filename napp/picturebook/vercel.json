@@ -13,7 +13,7 @@
         }
     ],
     "env": {
-        "MONGODB_URI": "mongodb+srv://rohitbisht:rohitbisht@cluster0.4hsts.mongodb.net/?retryWrites=true&w=majority",
+        "MONGO_URI": "mongodb+srv://rohitbisht:rohitbisht@cluster0.4hsts.mongodb.net/?retryWrites=true&w=majority",
         "SESSION_SECRET": "keyboard cat",
         "GOOGLE_CLIENT_ID": "348011173444-nbs8246eld5anpfnpc6kvgnbt9282qb5.apps.googleusercontent.com",
         "GOOGLE_CLIENT_SECRET": "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"
