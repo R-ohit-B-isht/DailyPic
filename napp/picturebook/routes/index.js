@@ -84,7 +84,7 @@ cron.schedule('*/10 * * * * *', () => {
 
 const ITEMS_PER_PAGE = 9;
 
-router.get('/dashboard', async (req, res) => {
+router.get('/dashboard',ensureGuest, async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const skip = (page - 1) * ITEMS_PER_PAGE;
@@ -97,16 +97,16 @@ router.get('/dashboard', async (req, res) => {
       .sort({ postedOn: -1 })
       .skip(skip)
       .limit(ITEMS_PER_PAGE);
-    const nonDeletedNewsItems = allNewsItems
+    // const nonDeletedNewsItems = allNewsItems
     // Filter out deleted items
-    // const nonDeletedNewsItems = allNewsItems.filter((item) => {
-    //   const isDeleted = req.user.deleted.some((deletedItem) => deletedItem.articleId.toString() === item._id.toString());
-    //   return !isDeleted;
-    // });
+    const nonDeletedNewsItems = allNewsItems.filter((item) => {
+      const isDeleted = req.user.deleted.some((deletedItem) => deletedItem.articleId.toString() === item._id.toString());
+      return !isDeleted;
+    });
 
     // Extract markedAsRead item IDs
-    const markedAsReadItemIds=[]
-    // const markedAsReadItemIds = req.user.markedAsRead.map((item) => item.newsItemId);
+    // const markedAsReadItemIds=[]
+    const markedAsReadItemIds = req.user.markedAsRead.map((item) => item.newsItemId);
 
     const currentPage = page;
 
