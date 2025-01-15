@@ -434,6 +434,45 @@ a {
   }
 }
 
+/* Navbar and Sidenav Responsive Styles */
+@media (max-width: 768px) {
+  /* Adjust brand logo size and spacing for mobile */
+  .brand-logo {
+    font-size: 1.2rem !important;
+    padding-left: 0 !important;
+  }
+
+  /* Ensure hamburger menu is visible and properly spaced */
+  .sidenav-trigger {
+    margin-left: 10px !important;
+    display: block !important;
+  }
+
+  /* Adjust container padding for mobile */
+  .nav-wrapper.container {
+    padding: 0 10px;
+  }
+}
+
+/* Sidenav styling */
+.sidenav .user-view {
+  padding: 20px 16px;
+  margin-bottom: 0;
+}
+
+.sidenav .user-view .name {
+  font-size: 1.2rem;
+  margin-top: 8px;
+}
+
+.sidenav li > a {
+  display: flex;
+  align-items: center;
+}
+
+.sidenav li > a > i {
+  margin-right: 10px;
+}
 
 
 .pagination {
