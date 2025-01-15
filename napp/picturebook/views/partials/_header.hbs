@@ -1,10 +1,26 @@
 <nav class="grey darken-3">
     <div class="nav-wrapper container">
-        <div class="row" style="display: flex; align-items: center; justify-content: space-between;">
-            <a href="/auth/logout" style="order: 1;">Logout {{name}}</a>
-            <a href="/dashboard" class="brand-logo" style="order: 2; display: flex; align-items: center;">
-                <i class="fas fa-newspaper" style="margin-right: 5px;display: flex; align-items: center;"></i> D-News
+        <!-- Mobile Toggle Button -->
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
+        
+        <!-- Desktop Nav Items -->
+        <div class="hide-on-med-and-down">
+            <a href="/dashboard" class="brand-logo">
+                <i class="fas fa-newspaper"></i> D-News
             </a>
+            <ul class="right">
+                <li><a href="/auth/logout">Logout {{name}}</a></li>
+            </ul>
         </div>
     </div>
 </nav>
+
+<!-- Mobile Sliding Nav -->
+<ul class="sidenav" id="mobile-demo">
+    <li class="sidenav-header grey darken-3 white-text">
+        <div class="user-view">
+            <a href="/dashboard"><i class="fas fa-newspaper"></i> D-News</a>
+        </div>
+    </li>
+    <li><a href="/auth/logout">Logout {{name}}</a></li>
+</ul>

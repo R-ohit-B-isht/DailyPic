@@ -502,3 +502,35 @@ a {
 .active .pagination-link::before {
   background: rgba(255, 255, 255, 0);
 }
+
+/* Responsive navbar styles */
+@media only screen and (max-width: 992px) {
+  .brand-logo {
+    font-size: 1.5rem;
+  }
+  
+  .sidenav-header {
+    padding: 20px 16px;
+  }
+  
+  .sidenav-header a {
+    color: white !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .sidenav-header i {
+    font-size: 1.5rem;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .brand-logo {
+    font-size: 1.2rem;
+  }
+  
+  .sidenav-trigger {
+    margin-left: 0;
+  }
+}
