@@ -343,6 +343,29 @@ a {
     padding: 4rem;
   }
 
+  /* Navbar mobile styles */
+  .sidenav-trigger {
+    color: white;
+    margin-right: 1rem;
+  }
+
+  .sidenav.grey.darken-3 {
+    padding-top: 1rem;
+  }
+
+  .sidenav li > a {
+    padding: 0 2rem;
+    height: 64px;
+    line-height: 64px;
+    display: flex !important;
+    align-items: center;
+  }
+
+  .sidenav li > a i {
+    margin: 0 1rem 0 0;
+    color: white;
+  }
+
   .grid {
     grid-template-columns: 1fr;
     margin-bottom: 120px;
