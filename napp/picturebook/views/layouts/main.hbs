@@ -23,12 +23,23 @@
         integrity="sha256-bEIQpI72w9NJuIVhTLFUF2/8uxl0u5800r8ddViuv+o=" crossorigin="anonymous"></script>
 
     <script>
-       
-        M.FormSelect.init(document.querySelector('#status'))
-
-        CKEDITOR.replace('body', {
-            plugins: 'wysiwygarea, toolbar, basicstyles, link'
-        })
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize sidenav
+            var elems = document.querySelectorAll('.sidenav');
+            var instances = M.Sidenav.init(elems, {
+                edge: 'left',
+                draggable: true,
+                inDuration: 250,
+                outDuration: 200
+            });
+            
+            // Initialize other components
+            M.FormSelect.init(document.querySelector('#status'));
+            
+            CKEDITOR.replace('body', {
+                plugins: 'wysiwygarea, toolbar, basicstyles, link'
+            });
+        });
     </script>
 </body>
 

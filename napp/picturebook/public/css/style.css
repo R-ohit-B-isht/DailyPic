@@ -338,6 +338,31 @@ a {
 }
 
 /* Mobile and Tablet */
+/* Mobile navbar styles */
+@media (max-width: 600px) {
+  nav .brand-logo {
+    font-size: 1.3rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .sidenav-trigger {
+    display: block !important;
+    float: left;
+    position: relative;
+    z-index: 1;
+    margin-left: 1rem;
+  }
+
+  .sidenav .user-view {
+    padding: 20px 16px;
+  }
+
+  .sidenav li > a > i {
+    margin-right: 1rem;
+  }
+}
+
 @media (max-width: 1023px) {
   .content {
     padding: 4rem;
