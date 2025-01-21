@@ -502,3 +502,33 @@ a {
 .active .pagination-link::before {
   background: rgba(255, 255, 255, 0);
 }
+
+/* Navbar and Sidenav Responsive Styles */
+.sidenav .user-view {
+  padding: 32px 32px 0;
+}
+
+.sidenav li > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 32px;
+}
+
+.sidenav li > a > i {
+  margin: 0;
+}
+
+.sidenav .divider {
+  margin: 8px 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .brand-logo {
+    font-size: 1.5rem !important;
+  }
+  
+  .sidenav-trigger {
+    margin-left: -12px;
+  }
+}
