@@ -24,6 +24,14 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+// CORS middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 // Method override
 app.use(
   methodOverride(function (req, res) {
@@ -99,7 +107,15 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routes
 app.use('/', require('./routes/index'))
 
+// Serve invoice upload form
+app.get('/invoice', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'invoice-upload.html'));
+});
+
 app.use("/auth", require("./routes/auth"));
+
+// Invoice parsing route (public, no auth required)
+app.use('/public/invoice', require('./routes/invoice'));
 
 const PORT = process.env.PORT || 3000;
 

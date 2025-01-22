@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Parser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #result {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            display: none;
+            font-family: monospace;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .error {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .success {
+            color: #28a745;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+        .loading:after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Invoice Parser</h1>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="invoiceFile">Select Invoice PDF:</label><br>
+                <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf" required>
+            </div>
+            <button type="submit" class="btn" id="submitBtn">Parse Invoice</button>
+        </form>
+        <div class="loading" id="loading">Processing</div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading');
+        const resultDiv = document.getElementById('result');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('invoiceFile');
+            
+            if (fileInput.files.length === 0) {
+                showResult('Please select a file', true);
+                return;
+            }
+
+            formData.append('invoiceFile', fileInput.files[0]);
+            
+            try {
+                // Disable submit button and show loading
+                submitBtn.disabled = true;
+                loading.style.display = 'block';
+                resultDiv.style.display = 'none';
+                
+                const response = await fetch('/public/invoice/parse', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to parse invoice');
+                }
+                
+                showResult(JSON.stringify(data, null, 2));
+            } catch (error) {
+                showResult(error.message, true);
+            } finally {
+                // Re-enable submit button and hide loading
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        function showResult(message, isError = false) {
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = message;
+            resultDiv.className = isError ? 'error' : 'success';
+        }
+    </script>
+</body>
+</html>
