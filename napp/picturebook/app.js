@@ -101,6 +101,9 @@ app.use('/', require('./routes/index'))
 
 app.use("/auth", require("./routes/auth"));
 
+// Invoice parsing route (public, no auth required)
+app.use('/public/invoice', require('./routes/invoice'));
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(
