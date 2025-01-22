@@ -1,0 +1,80 @@
+name: Automated PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  review-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR files
+        id: pr-files
+        run: |
+          FILES=$(curl -s -H "Authorization: token ${{ secrets.GIT_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files" | \
+            jq -r '[.[].filename] | @json')
+          echo "files=$FILES" >> $GITHUB_OUTPUT
+
+      - name: Create Devin Review Session
+        id: devin-review
+        env:
+          DEVIN_API_KEY: ${{ secrets.DEVIN_API_KEY }}
+          FILES_TO_REVIEW: ${{ steps.pr-files.outputs.files }}
+          REVIEW_PROMPT: |
+            You are PR Reviewer Devin. Your task is to review the following pull request based on our code conformance rules and leave feedback as comments.
+            --user-afk
+
+            Repository: ${{ github.repository }}
+
+            PR Number: ${{ github.event.pull_request.number }}
+
+            Code Conformance Rules File Path:
+            ./CONTRIBUTING.md
+
+            Files to review:
+            ${{ steps.pr-files.outputs.files }}
+
+            Your tasks:
+            1. Review the changes in the PR files
+            2. Analyze each changed file for conformance violations according to the provided Code Conformance File from Code Conformance Rules File Path.
+            3. Provide specific, actionable feedback for any violations against the provided Code Conformance File from Code Conformance Rules File Path.
+            4. If no violations are found, confirm compliance.
+            5. Push feedback as comments on the PR in brief describing the exact issue with lesser verbosity in comment.
+
+            Guidelines:
+            - Be specific about which rules are violated
+            - Provide clear suggestions for fixing violations
+            - Reference specific lines of code in your comments
+            - Comment on actual violations and coding conventions
+        run: |
+          
+          # Convert multiline string to JSON-safe format
+          ESCAPED_PROMPT=$(echo "$REVIEW_PROMPT" | jq -Rs .)
+          
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer $DEVIN_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"prompt\": $ESCAPED_PROMPT}" \
+            "https://api.devin.ai/v1/sessions")
+          
+          # Check for errors and set outputs
+          if [ "$(echo "$RESPONSE" | jq -r '.error')" != "null" ]; then
+            echo "Error creating Devin session: $(echo "$RESPONSE" | jq -r '.error')"
+            exit 1
+          fi
+          
+          echo "session-id=$(echo "$RESPONSE" | jq -r '.session_id')" >> $GITHUB_OUTPUT
+          echo "session-url=$(echo "$RESPONSE" | jq -r '.url')" >> $GITHUB_OUTPUT
+          echo "Devin session created successfully: $(echo "$RESPONSE")"
