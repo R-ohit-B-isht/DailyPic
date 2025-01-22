@@ -62,7 +62,7 @@ jobs:
           
           # Convert multiline string to JSON-safe format
           ESCAPED_PROMPT=$(echo "$REVIEW_PROMPT" | jq -Rs .)
-          
+          sleep 60
           RESPONSE=$(curl -s -X POST \
             -H "Authorization: Bearer $DEVIN_API_KEY" \
             -H "Content-Type: application/json" \
